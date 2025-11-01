@@ -49,22 +49,22 @@ const MovieDetail = () => {
   const releaseDate = tmdbApi.getReleaseDate(movie);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-y-auto">
       <Navbar />
       
       {/* Hero Section with Backdrop */}
-      <div className="relative h-[60vh] w-full overflow-hidden">
+      <div className="relative h-[70vh] w-full overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={tmdbApi.getImageUrl(movie.backdrop_path, 'original')}
             alt={title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
         </div>
       </div>
 
-      <div className="relative -mt-48 px-8 md:px-16 max-w-7xl mx-auto pb-16">
+      <div className="relative -mt-32 px-8 md:px-16 max-w-7xl mx-auto pb-24">
         <Button
           onClick={() => navigate('/')}
           variant="secondary"
@@ -147,9 +147,12 @@ const MovieDetail = () => {
 
         {/* Collection Section */}
         {collection && collection.parts && collection.parts.length > 1 && (
-          <div className="mt-16">
+          <div className="mt-20">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
+              {movie.belongs_to_collection?.name || 'Collection'}
+            </h2>
             <MovieRow 
-              title={`${movie.belongs_to_collection?.name || 'Collection'}`} 
+              title="" 
               movies={collection.parts} 
             />
           </div>
@@ -157,8 +160,11 @@ const MovieDetail = () => {
 
         {/* Similar Movies Section */}
         {similarMovies && similarMovies.length > 0 && (
-          <div className="mt-12">
-            <MovieRow title={`More Like ${title}`} movies={similarMovies} />
+          <div className="mt-20">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
+              More Like {title}
+            </h2>
+            <MovieRow title="" movies={similarMovies} />
           </div>
         )}
       </div>
