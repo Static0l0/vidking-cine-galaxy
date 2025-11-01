@@ -132,4 +132,16 @@ export const tmdbApi = {
   getTitle: (item: Movie) => item.title || item.name || 'Untitled',
   
   getReleaseDate: (item: Movie) => item.release_date || item.first_air_date || '',
+
+  getTVSeasons: async (tvId: number) => {
+    const response = await fetch(`${TMDB_BASE_URL}/tv/${tvId}?api_key=${TMDB_API_KEY}`);
+    const data = await response.json();
+    return data.seasons || [];
+  },
+
+  getTVEpisodes: async (tvId: number, seasonNumber: number) => {
+    const response = await fetch(`${TMDB_BASE_URL}/tv/${tvId}/season/${seasonNumber}?api_key=${TMDB_API_KEY}`);
+    const data = await response.json();
+    return data.episodes || [];
+  },
 };

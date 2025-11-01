@@ -4,8 +4,19 @@ interface VidkingOptions {
   progress?: number; // start time in seconds
 }
 
-export const getVidkingUrl = (tmdbId: number, options?: VidkingOptions) => {
-  const baseUrl = `https://www.vidking.net/embed/movie/${tmdbId}`;
+export const getVidkingUrl = (
+  tmdbId: number, 
+  mediaType: 'movie' | 'tv' = 'movie',
+  season?: number,
+  episode?: number,
+  options?: VidkingOptions
+) => {
+  let baseUrl = `https://www.vidking.net/embed/${mediaType}/${tmdbId}`;
+  
+  // For TV shows, add season and episode if provided
+  if (mediaType === 'tv' && season && episode) {
+    baseUrl += `/${season}/${episode}`;
+  }
   
   if (!options) return baseUrl;
   
