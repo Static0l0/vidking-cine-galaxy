@@ -36,7 +36,7 @@ export const Navbar = () => {
             onClick={() => navigate('/')}
             className="text-2xl md:text-3xl font-bold text-primary cursor-pointer hover:scale-105 transition-transform"
           >
-            STREAMFLIX
+            CineMore
           </h1>
         </div>
 

@@ -29,7 +29,38 @@ export interface MovieDetails extends Movie {
   };
 }
 
+export interface Genre {
+  id: number;
+  name: string;
+}
+
 export const tmdbApi = {
+  getGenres: async (): Promise<Genre[]> => {
+    const [movieGenres, tvGenres] = await Promise.all([
+      fetch(`${TMDB_BASE_URL}/genre/movie/list?api_key=${TMDB_API_KEY}`),
+      fetch(`${TMDB_BASE_URL}/genre/tv/list?api_key=${TMDB_API_KEY}`)
+    ]);
+    const movieData = await movieGenres.json();
+    const tvData = await tvGenres.json();
+    
+    // Combine and deduplicate genres
+    const allGenres = [...movieData.genres, ...tvData.genres];
+    const uniqueGenres = allGenres.filter((genre, index, self) =>
+      index === self.findIndex((g) => g.id === genre.id)
+    );
+    return uniqueGenres.sort((a, b) => a.name.localeCompare(b.name));
+  },
+
+  getMoviesByGenre: async (genreId: number): Promise<Movie[]> => {
+    const [moviesRes, tvRes] = await Promise.all([
+      fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${genreId}&sort_by=popularity.desc`),
+      fetch(`${TMDB_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&with_genres=${genreId}&sort_by=popularity.desc`)
+    ]);
+    const movies = await moviesRes.json();
+    const tv = await tvRes.json();
+    return [...movies.results, ...tv.results];
+  },
+
   getTrending: async (): Promise<Movie[]> => {
     const response = await fetch(`${TMDB_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}`);
     const data = await response.json();
